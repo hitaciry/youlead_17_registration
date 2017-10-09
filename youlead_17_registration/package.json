@@ -1,0 +1,24 @@
+{
+  "name": "youlead_17_registration",
+  "version": "0.0.1",
+  "description": "React + Firebase check in web app For AIESEC YouLead Forum ",
+  "main": "src/index.js",
+  "repository": "https://github.com/hitaciry/youlead_17_registration.git",
+  "author": "andrey a.shitikov90@gmail.com",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "babel": "^6.23.0",
+    "babel-eslint": "^8.0.1",
+    "babel-loader": "^7.1.2",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "eslint": "^4.8.0",
+    "eslint-plugin-react": "^7.4.0",
+    "firebase-tools": "^3.13.1",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "webpack-dev-middleware": "^1.12.0",
+    "webpack-hot-middleware": "^2.19.1"
+  }
+}
