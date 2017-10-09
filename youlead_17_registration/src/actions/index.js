@@ -9,6 +9,7 @@ const db = firebase.database(firebase.initializeApp(config))
 
 
 export const getUser= async userId=>{type:GET_USER, await db.ref('users/'+userId).once()}
+export const getUserByMail= async email=>{type:GET_USER, await db.ref('users').child('email').equalTo(email).once()}
 export const updateUser= async user=> await db.ref('users/'+user.id).set(user)
                                       .then(respnce=>{type:UPDATE_USER,{user:user,response:respnce}})
                                       .catch(error =>{type:ERROR,error})
