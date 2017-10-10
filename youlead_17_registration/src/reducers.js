@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { UPDATE_MASTER_CLASSES,UPDATE_USER,ERROR,GET_USER } from './actions'
+import { UPDATE_MASTER_CLASSES,UPDATE_USER,ERROR,GET_USER,GET_USERS_EMAILS, GET } from './actions'
 function reducer_(state,action){
   switch(action.type){
     case UPDATE_MASTER_CLASSES:
@@ -8,6 +8,8 @@ function reducer_(state,action){
     return {user:action.user, response:action.response, masterclasses:state.masterclasses}
     case GET_USER:
     return {user:action, masterclasses:state.masterclasses}
+    case GET_USERS_EMAILS:
+    return {emails:action}
     case ERROR:
     return {error:action}
     default:

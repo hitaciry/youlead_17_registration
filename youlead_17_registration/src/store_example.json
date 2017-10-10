@@ -7,6 +7,8 @@
   "workshops":[{
     //company name usually
     "name":"SunInbev",
-    "section":"Social"
-  },]
+    "section":"Social",
+    "Limit":40,
+    "attend":0
+  }]
 }
