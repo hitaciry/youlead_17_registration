@@ -19,6 +19,7 @@
     "firebase": "^4.5.0",
     "firebase-tools": "^3.13.1",
     "material-ui": "^0.19.4",
+    "qrcode": "^0.9.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-router-redux": "^4.0.8",
