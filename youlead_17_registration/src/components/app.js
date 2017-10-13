@@ -7,16 +7,18 @@ import * as responceHandler from './response_handler'
 import * as dashboard from './dashboard'
 import { Router, Route, browserHistory } from 'react-router'
 
-export default App = ( store)=>{
+const App = ( store)=>{
     <div>
-        <errorHandler errror={store.error}/>
-        <responceHandler responce={store.responce} />
+        <errorHandler errror={store.getState().error}/>
+        <responceHandler responce={store.getState().responce} />
         {/* Tell the Router to use our enhanced history */} 
         <Router history={browserHistory} >
-            <Route path="/getqrcode" component={getQRCode}/>
-            <Route path="/registration" component={registration}/>
+        
+            <Route path="/getqrcode" render={()=> <getQRCode user={store.getState().user} />}/>
+            <Route path="/registration" component={()=><registration/>}/>
             <Route path="/checkin/(:userId)" component={checkin}/>
             <Route path="/dashboard" component={dashboard}/>
         </Router>
     </div>
 }
+export default App;

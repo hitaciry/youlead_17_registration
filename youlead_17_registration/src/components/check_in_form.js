@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import {  } from '../actions'
 import Paper from 'material-ui/Paper'
 import TextField from 'material-ui/TextField'
 import SelectField from 'material-ui/SelectField'
@@ -12,7 +11,11 @@ const style = {
   textAlign: 'center',
   display: 'inline-block',
 };
-export default class CheckInForm extends Comment{
+ class CheckInForm extends Comment{
+  componentWillMount(){
+    if(!this.props.user)
+      getUser()
+  }
   constructor(props) {
     super(props);
     this.state = {
@@ -26,7 +29,7 @@ export default class CheckInForm extends Comment{
   render(){
     let user = this.props.user
     //groupping masterclasses
-    let sectionGroups = this.props.masterClasses
+    let sectionGroups = this.props.masterClasses[user.section]
                         .filter(f=>f.section===user.section&&new Date(f.date).getTime()===new Date().getTime())
                         .reduce((res,val)=>{(res[val.time]=res[val.time]||[]/*init this, may be we have alternative?*/).push(val); return res})   
     return
@@ -35,11 +38,37 @@ export default class CheckInForm extends Comment{
         
         <TextField hintText="Input secret" val={this.state.secretWord} onChange={checkSecret} />
         {this.state.secret &&
-          sectionGroups.array.forEach(function(element) {
-            
-          }, this)
-
+          sectionGroups.map((index,groupedMasterclass)=>
+          //how to send selected value and group index
+            <SelectField onChange={(e,i,v) => this.props.checkInUser(user,groupedMasterclass[i],index)}>
+              {groupedMasterclass.map((index,value)=>
+                <MenuItem index={index} value={`${value.name} ${value.attends}/${value.limit}`} disabled={value.isBlocked||value.attends===value.limit} />
+              )}        
+            </SelectField>
+          )
         }
       </Paper>
   }
-}  
+} 
+import {connect} from 'redux'
+import { getUser,getMasterclasses } from '../actions'
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+      user:state.user,
+      masterClasses:state.MasterClasses  
+  }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    getUser: () => {
+      dispatch(getUser(ownProps.userId))
+    },
+    getMasterclasses: ()=>{
+      dispatch(getMasterclasses())
+    }
+  }
+}
+
+export default CheckInForm  
