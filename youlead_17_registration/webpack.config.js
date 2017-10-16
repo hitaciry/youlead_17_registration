@@ -2,18 +2,23 @@ var path = require('path')
 var webpack = require('webpack')
 
 module.exports = {
-  devtool: 'cheap-module-eval-source-map',
-  entry: [
-    'webpack-hot-middleware/client',
-    './src/index'
-  ],
+  entry: ['babel-polyfill', './src/index.js'],
   output: {
-    path: path.join(__dirname, 'public'),
+    path: __dirname + '/public',
     filename: 'bundle.js'
   },
-  plugins: [
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
-  ]
+  module: {
+    loaders: [
+      {
+        test: /\.js$/, // a regular expression that catches .js files
+        exclude: /node_modules/,
+        loader: 'babel-loader'
+      }
+    ]
+  },
+  devServer: {
+    port: 3000, // most common port
+    contentBase: './public',
+    inline: true
+  }
 }

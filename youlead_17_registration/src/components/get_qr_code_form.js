@@ -12,27 +12,12 @@ const style = {
   margin: 20,
   textAlign: 'center',
   display: 'inline-block',
-};import { connect } from 'react-redux'
-
-const mapStateToProps = (state, ownProps) => {
-  return {
-      user:state.user  
-  }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    getUser: (email) => {
-      dispatch(getUserByMail(email))
-    }
-  }
-}
-
-export default  connect(  mapStateToProps,
-  mapDispatchToProps)(class GetQRCodeForm extends Comment{
+class GetQRCodeForm extends Comment{
   componentDidMount() {
-    var canvas = document.getElementById('canvas')
     if (this.props.user){
+      var canvas = document.getElementById('canvas')
       QRCode.toCanvas(canvas,window.location.protocol+'//'+window.location.host+'/checkin/'+this.props.user.id,  error=> {
         //TODO: remove on Prod mode
         console.log(error?error:'success!');
@@ -48,11 +33,8 @@ export default  connect(  mapStateToProps,
     link = link.replace(/^data:application\/octet-stream/, 'data:application/octet-stream;headers=Content-Disposition%3A%20attachment%3B%20filename=Canvas.png');
   
     this.href = link;
-  }
-  makeQRCode(){
-
   } 
-  findUser= (event, value)=>this.props.getUser(value)
+  findUser= (event)=>this.props.getUser(event.target.value)
   render(){
     return
       <Paper style={style} zDepth={1}>
@@ -68,11 +50,27 @@ export default  connect(  mapStateToProps,
             <p> Please, show this code to our volunteers and get Your gifts</p>
 
             <img src="/qr" alt="qrcode"/>
-            <IconButton tooltip="Download" onClick={this.download()}>
+            <IconButton tooltip="Download" onClick={this.download}>
               <FontIcon className="file_download" />
             </IconButton>
           </div>
         }
       </Paper>
   }
-} )
+} 
+import { connect } from 'react-redux'
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+      user:state.user  
+  }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    getUser: (email) => {
+      dispatch(getUserByMail(email))
+    }
+  }
+}
+export default  connect(  mapStateToProps, mapDispatchToProps)( GetQRCodeForm )
