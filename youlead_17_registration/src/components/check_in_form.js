@@ -4,6 +4,8 @@ import TextField from 'material-ui/TextField'
 import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
 import RaisedButton from 'material-ui/RaisedButton';
+import {connect} from 'redux'
+import { getUser,getMasterClasses} from '../actions'
 
 const style = {
   height: 300,
@@ -36,7 +38,7 @@ const style = {
       <Paper style={style} zDepth={1}>
         <p>Welcome to YouLead {new Date().getFullYear()} Preregistration! </p>
         
-        <TextField hintText="Input secret" val={this.state.secretWord} onChange={checkSecret} />
+        <TextField hintText="Input secret" val={this.state.secretWord} onChange={this.checkSecret} />
         {this.state.secret &&
           sectionGroups.map((index,groupedMasterclass)=>
           //how to send selected value and group index
@@ -50,8 +52,6 @@ const style = {
       </Paper>
   }
 } 
-import {connect} from 'redux'
-import { getUser,getMasterclasses } from '../actions'
 
 const mapStateToProps = (state, ownProps) => {
   return {
@@ -65,8 +65,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     getUser: () => {
       dispatch(getUser(ownProps.userId))
     },
-    getMasterclasses: ()=>{
-      dispatch(getMasterclasses())
+    getMasterClasses: ()=>{
+      dispatch(getMasterClasses())
     }
   }
 }

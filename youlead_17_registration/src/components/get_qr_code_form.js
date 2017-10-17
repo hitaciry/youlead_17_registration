@@ -5,7 +5,7 @@ import FontIcon from 'material-ui/FontIcon'
 import IconButton from 'material-ui/IconButton'
 import TextField from 'material-ui/TextField'
 import QRCode from 'qrcode'
-import { getUserByMail } from '../actions'
+import { connect } from 'react-redux'
 
 const style = {
   height: 300,
@@ -17,7 +17,7 @@ const style = {
 class GetQRCodeForm extends Comment{
   componentDidMount() {
     if (this.props.user){
-      var canvas = document.getElementById('canvas')
+      let canvas = document.getElementById('canvas')
       QRCode.toCanvas(canvas,window.location.protocol+'//'+window.location.host+'/checkin/'+this.props.user.id,  error=> {
         //TODO: remove on Prod mode
         console.log(error?error:'success!');
@@ -25,7 +25,8 @@ class GetQRCodeForm extends Comment{
     }
   }
   download(){
-    var link = canvas.toDataURL('image/png');
+    let canvas = document.getElementById('canvas')
+    let link = canvas.toDataURL('image/png');
     /* Change MIME type to trick the browser to downlaod the file instead of displaying it */
     link = link.replace(/^data:image\/[^;]*/, 'data:application/octet-stream');
   
@@ -42,7 +43,7 @@ class GetQRCodeForm extends Comment{
         {!this.props.user?
           <div>
             <p>Please Enter Your registration Email</p>
-            <TextField hintText="Input email" type="email" onChange={findUser} />
+            <TextField hintText="Input email" type="email" onChange={this.findUser} />
           </div>
         :
           <div>
@@ -58,7 +59,6 @@ class GetQRCodeForm extends Comment{
       </Paper>
   }
 } 
-import { connect } from 'react-redux'
 
 const mapStateToProps = (state, ownProps) => {
   return {

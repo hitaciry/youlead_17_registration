@@ -7,6 +7,6 @@ const config ={
 }
 export const db = firebase.database(firebase.initializeApp(config))
 
-export const fromDb = (_db=db, dispatch, actionCreator) =>
+export const fromDb = (_db=db, dispatch, actionCreator,path) =>
                 db.ref(path).on('value', data => data.val() && dispatch(actionCreator(data.val())))
               

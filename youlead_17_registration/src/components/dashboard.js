@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { getUsers, getMasterClasses } from '../actions'
+import { getUsers, getMasterClasses,changeRegistrationState } from '../actions'
 import Paper from 'material-ui/Paper'
 import FontIcon from 'material-ui/FontIcon'
 import IconButton from 'material-ui/IconButton'

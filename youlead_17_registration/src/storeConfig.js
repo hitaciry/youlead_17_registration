@@ -6,12 +6,13 @@ import reducers from './reducers'
 
 
 const loggerMiddleware = createLogger()
-export default storeConfig = ()=>{
- createStore(
-  reducers,
-  applyMiddleware(
-    thunkMiddleware, // lets us dispatch() functions
-    loggerMiddleware // neat middleware that logs actions
-  )
+const storeConfig = ()=>{
+ return createStore(
+            reducers,
+            applyMiddleware(
+              thunkMiddleware, // lets us dispatch() functions
+              loggerMiddleware // neat middleware that logs actions
+            )
 )
 }
+export default storeConfig ;
