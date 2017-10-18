@@ -7,7 +7,7 @@ const store = storeConfig()
 store.dispatch({type:null})
 const Root = ()=>{
   return <Provider store={store}>  
-            <App store={store.getState()}/> 
+            <App store={store}/> 
          </Provider>
 }
 export default Root

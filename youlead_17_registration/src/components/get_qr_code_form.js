@@ -3,29 +3,32 @@ import { getUserByMail  } from '../actions'
 import Paper from 'material-ui/Paper'
 import FontIcon from 'material-ui/FontIcon'
 import IconButton from 'material-ui/IconButton'
+import FlatButton from 'material-ui/FlatButton'
 import TextField from 'material-ui/TextField'
-import QRCode from 'qrcode'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import QRCode from 'qrcode.react'
 import { connect } from 'react-redux'
 
 const style = {
-  height: 300,
-  margin: 20,
+  margin: 'auto',
+  padding: 20,
   textAlign: 'center',
-  display: 'inline-block',
+  display: 'table',
 }
 
-class GetQRCodeForm extends Comment{
-  componentDidMount() {
-    if (this.props.user){
-      let canvas = document.getElementById('canvas')
-      QRCode.toCanvas(canvas,window.location.protocol+'//'+window.location.host+'/checkin/'+this.props.user.id,  error=> {
-        //TODO: remove on Prod mode
-        console.log(error?error:'success!');
-      })
-    }
+class GetQRCodeForm extends Component{
+  constructor(props) {
+    super(props)
+    this.findUser=this.findUser.bind(this)
+    this.changeState=this.changeState.bind(this)
   }
-  download(){
-    let canvas = document.getElementById('canvas')
+  changeState(e){
+    var prop={}
+    prop[e.target.name]=e.target.value
+    this.setState(Object.assign({},this.state,prop))
+  } 
+  download(e){
+    let canvas = document.getElementsByTagName('canvas')
     let link = canvas.toDataURL('image/png');
     /* Change MIME type to trick the browser to downlaod the file instead of displaying it */
     link = link.replace(/^data:image\/[^;]*/, 'data:application/octet-stream');
@@ -35,42 +38,48 @@ class GetQRCodeForm extends Comment{
   
     this.href = link;
   } 
-  findUser= (event)=>this.props.getUser(event.target.value)
+  findUser(event){
+    console.log(this.props)
+    this.props.getUser(this.state.email)
+  }
   render(){
-    return
+    return <MuiThemeProvider>
       <Paper style={style} zDepth={1}>
         <p>Welcome to YouLead {new Date().getFullYear()} Preregistration! </p>
         {!this.props.user?
           <div>
             <p>Please Enter Your registration Email</p>
-            <TextField hintText="Input email" type="email" onChange={this.findUser} />
+            <TextField name="email" hintText="Input email" type="email" onChange={this.changeState} />
+            <FlatButton onClick={this.findUser} label="Search" />
           </div>
         :
           <div>
             <p> Thank You, <strong>{this.props.user.name}</strong>, for Preregistration!</p>
             <p> Please, show this code to our volunteers and get Your gifts</p>
 
-            <img src="/qr" alt="qrcode"/>
+            <QRCode value={window.location.protocol+'//'+window.location.host+'/checkin/'+this.props.user.key }/>
             <IconButton tooltip="Download" onClick={this.download}>
               <FontIcon className="file_download" />
             </IconButton>
           </div>
         }
       </Paper>
+      </MuiThemeProvider>
   }
 } 
 
 const mapStateToProps = (state, ownProps) => {
+  console.log(state)
   return {
-      user:state.user  
+      user:state.combineReducer.user  
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     getUser: (email) => {
-      dispatch(getUserByMail(email))
+      getUserByMail(email).then(dispatch)
     }
   }
 }
-export default  connect(  mapStateToProps, mapDispatchToProps)( GetQRCodeForm )
+export default connect(mapStateToProps, mapDispatchToProps)( GetQRCodeForm )

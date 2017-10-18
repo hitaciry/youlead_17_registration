@@ -6,7 +6,7 @@ import FlatButton from 'material-ui/FlatButton'
 import TextField from 'material-ui/TextField'
 import QRCode from 'qrcode'
 import { getUserByMail } from '../actions'
-import { v4 } from 'node-uuid'
+import * as uuidv4 from 'uuid/v4'
 import { connect } from 'react-redux'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
@@ -19,8 +19,9 @@ const style = {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-      user:state.user,
-      emails:state.emails  
+      user:state.combineReducer.user,
+      emails:state.combineReducer.emails  
+
   }
 }
 
@@ -33,45 +34,50 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 class RegistrationForm extends Component{
   constructor(props) {
-    super(props);
-    if(!this.props.emails)
+    super(props)
+    console.log('props', this.props)
+    if(!props.emails)
         {
       this.state = {fetchingEmails:true}
       this.props.getEmails().then(
-        this.state = {
-        fetchingEmails:false,
+        this.state = {fetchingEmails:false,
+        emails:props.emails,
         secretWord: "my secret",
         secret:false,
         email_error:null,
         user:{
-          id: new v4(),
+          id: uuidv4(),
           name: null,
           section: null,
-          email: null
-        }  }
-      )
-    }
-    else
-      this.state = {
+          email: null } 
+        } )
+    } 
+    this.state = {
+        emails:props.emails,
         secretWord: "my secret",
         secret:false,
         email_error:null,
         user:{
-          id: new v4(),
+          id: uuidv4(),
           name: null,
           section: null,
           email: null
-        }      
-    };
+        }
+      }
+    console.log(this.state)
+    this.emailValidation= this.emailValidation.bind(this)
+    this.changeState= this.changeState.bind(this)
   }
-  emailValidation(e){
-    if(this.props.emails.contains(e.target.value))
+  emailValidation(e, emails){
+    if(emails.some(s=>s===e.target.value))
       this.setState({email_error:'email already exist'})
     else
-      this.changeSate(e)
+      this.changeState(e)
   }
-  changeSate(e){
-    this.setState({user:{[e.target.name]:e.targrt.value}})
+  changeState(e){
+    var prop={}
+    prop[e.target.name]=e.target.value
+    this.setState({user:Object.assign({},this.state.user,prop)})
   }  
   findUser= (event, value)=>this.props.getUser(value)
   checkSecret = (event)=>this.setState({secret:this.state.secretWord===event.target.value})
@@ -86,9 +92,9 @@ class RegistrationForm extends Component{
         <TextField hintText='Input secret' type='password' val={this.state.secretWord} onChange={this.checkSecret} />
         {this.state.secret &&
           <div>
-            <TextField name = 'email' hintText='Input email'  val={this.state.user.email} errerrorText={this.state.email_error} onChange={this.emailValidation} />
-            <TextField name = 'name' hintText='Input name' val={this.state.user.name} onChange={this.changeSate} />
-            <TextField name = 'section' hintText='Input section' val={this.state.user.section} onChange={this.changeSate} />
+            <TextField name = 'email' hintText='Input email'  val={this.state.user.email} errorText={this.state.email_error} onChange={(event)=>this.emailValidation(event,this.props.emails)}/>
+            <TextField name = 'name' hintText='Input name' val={this.state.user.name} onChange={this.changeState} />
+            <TextField name = 'section' hintText='Input section' val={this.state.user.section} onChange={this.changeState} />
             <FlatButton onClick={(e)=>this.props.addUser(this.state.user)} label='Create'/>
           </div>
         }

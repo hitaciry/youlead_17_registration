@@ -20,13 +20,14 @@ export const getUsersEmails= async ()=>{
   emails.forEach((child)=>{
     emails_.push(child.val()['emailAddress'])
   })
-  console.log('emails:', emails)
-  console.log('emails_:', emails_)
   return {type:GET_USERS_EMAILS,emails:emails_}
 }
 export const getUserByMail= async email=>{
-  const user= await db.ref('Users').orderByChild('emailAddress').equalTo(email).once()
-  return {type:GET_USER, user:user }
+  console.log(email)
+  const user= await db.ref('Users').orderByChild('emailAddress').equalTo(email).once('value',(data)=>data)
+  const user_=Object.assign(user.val()[Object.keys(user.val())[0]],{key:Object.keys(user.val())[0]})
+  console.log(user_)
+  return {type:GET_USER, user:user_ }
 }
 
 export const updateUser= async user=> {

@@ -1,5 +1,5 @@
 
-import * as getQRCode from './get_qr_code_form'
+import GetQRCodeForm from './get_qr_code_form'
 import RegistrationForm from'./registration_form'
 import * as checkin from './check_in_form'
 import * as errorHandler from './error_handler'
@@ -17,7 +17,7 @@ return(
         {/* Tell the Router to use our enhanced history */} 
         <BrowserRouter > 
             <Switch>       
-            <Route path="/getqrcode" render={()=> <getQRCode user={store.user} />}/>
+            <Route path="/getqrcode" component={GetQRCodeForm}/>
             <Route path="/registration" component={RegistrationForm}/>
             <Route path="/checkin/(:userId)" component={checkin}/>
             <Route path="/dashboard" component={dashboard}/>
