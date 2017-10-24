@@ -69,7 +69,6 @@ class GetQRCodeForm extends Component{
 } 
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(state)
   return {
       user:state.combineReducer.user  
   }

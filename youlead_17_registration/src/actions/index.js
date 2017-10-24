@@ -31,54 +31,61 @@ export const getUserByMail= async email=>{
 }
 
 export const updateUser= async user=> {
-  const response= await db.ref('Users/'+user.id).set(user)
+  const response= await db.ref('Users/'+user.key).set(user)
   return {type:UPDATE_USER,response:response}
 }
 export const getUser= async userId=>{
-  const user=await db.ref('users/'+userId).once()
-  return {type:GET_USER, user:user }
+  const user=await db.ref('Users/'+userId).once('value',(data)=>data).catch(console.log)
+  
+  console.log('user',user.val())
+  return {type:GET_USER, user:user.val() }
 }
 
 
 //This is so strange method
 export const userCheckIn = async (user,masterClassName,masterClassTime, dispatch)=>{
-  const date =new Date().toLocaleDateString('ru')
+  const date =(new Date()).toLocaleDateString('ru').split('.').join('')
   if(user[date]&&user[date][masterClassTime]){
     if(user[date][masterClassTime]===masterClassName)
       return;
     else
-      dispatch( decrementMasterClassAttendee(`${date}/${user.section}/${masterClassTime}/${user[date][masterClassTime]}/attends`))
+      dispatch(await decrementMasterClassAttendee(`${date}/${user.section}/${masterClassTime}/${user[date][masterClassTime]}/attends`))
   }else{
     if(!user[date]) user[date]={}
     if(!user[date][masterClassTime]) user[date][masterClassTime]={}
   }
     user[date][masterClassTime]=masterClassName
-    dispatch( incrementMasterClassAttendee(`${date}/${user.section}/${masterClassTime}/${masterClassName}/attends`))
-    dispatch( updateUser(user))
+    dispatch(await incrementMasterClassAttendee(`${date}/${user.section}/${masterClassTime}/${masterClassName}/attends`))
+    dispatch(await updateUser(user))
+    dispatch(await getMasterClassesForUser(date,user.section))
 }
 
 
 export const incrementMasterClassAttendee =async id=>{
-  const response = await db.ref('masterclasses/'+id)
-    .transaction(value=>value?value++:value)
+  const attends=await db.ref('MasterClasses/'+id).once('value', data=>data)
+  const response = await db.ref('MasterClasses/'+id).set(attends.val()+1)
   return{type:INCREMENT_MASTER_CLASS, response:response}       
 }                          
 export const decrementMasterClassAttendee =async id=>{
-  const response = await db.ref('masterclasses/'+id)
-    .transaction(value=>value?value--:value)
+  const attends=await db.ref('MasterClasses/'+id).once('value', data=>data)
+  const response = await db.ref('MasterClasses/'+id).set(attends.val()-1)
   return {type:DECREMENT_MASTER_CLASS, response: response}
 } 
 export const getMasterClasses = async () =>{
-  const masterclasses=await db.ref('masterclasses').once()
-  return {type:UPDATE_MASTER_CLASSES,masterclasses:masterclasses}
+  const masterclasses=await db.ref('MasterClasses').once('value',(data)=>data).catch(console.log)
+  return updateMasterClasses(masterclasses.val())
+} 
+export const getMasterClassesForUser = async (date,section) =>{
+  const masterclasses=await db.ref(`MasterClasses/${date}/${section}`).once('value',(data)=>data).catch(console.log)
+  return updateMasterClasses(masterclasses.val())
 }
-//TODO: add logic for prelimits
+
 export const updateMasterClasses= (masterclasses) =>({type:UPDATE_MASTER_CLASSES,masterclasses})
 export const updateUsers= (users) =>({type:UPDATE_USERS,users})
 export const trowError = (error)=> ({type:ERROR, error:error}) 
 
 export const addUser = async (user)=>{
-  const response = await db.ref('users/'+user.id).set(user)
+  const response = await db.ref('Users/'+user.id).set(user)
   return{type:ADD_USER,user:user, response:response }
 }
 
@@ -87,6 +94,6 @@ export const changeRegistrationState=async (path) => {
   return {trype:CHANGE_REGISTRATION_STATE, response:response }
 } 
 export const getUsers = async()=>{
-  const users= await db.ref('users').once()
-  return {type:GET_USERS, users:users}
+  const users= await db.ref('Users').once('value',(data)=>data).catch(console.log)
+  return {type:GET_USERS, users:users.val()}
 }

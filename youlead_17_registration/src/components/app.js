@@ -1,7 +1,7 @@
 
 import GetQRCodeForm from './get_qr_code_form'
 import RegistrationForm from'./registration_form'
-import * as checkin from './check_in_form'
+import CheckInForm from './check_in_form'
 import * as errorHandler from './error_handler'
 import * as responceHandler from './response_handler'
 import * as dashboard from './dashboard'
@@ -19,7 +19,7 @@ return(
             <Switch>       
             <Route path="/getqrcode" component={GetQRCodeForm}/>
             <Route path="/registration" component={RegistrationForm}/>
-            <Route path="/checkin/(:userId)" component={checkin}/>
+            <Route path="/checkin/:userId" component={CheckInForm}/>
             <Route path="/dashboard" component={dashboard}/>
             <Route exact path="/">
                 <div>
