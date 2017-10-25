@@ -39,8 +39,10 @@
     "uuid": "^3.1.0"
   },
   "scripts": {
-    "build": "webpack",
+    "build": "react-scripts build",
     "start": "react-scripts start",
+    "deploy": "firebase deploy",
+    "build-and-deploy":"yarn build && yarn deploy",
     "browserify": "browserify src/index.js -o public/bundle.js "
   },
   "babel": {
