@@ -37,7 +37,7 @@ const style = {
  // window.location.protocol + "//" + window.location.host
   render(){    
     const user = this.props.user
-    const masterClasses = this.props.masterClasses
+    const masterclasses = this.props.masterclasses
     const selectMasterClassElement = (value)=>{
       console.log(value)
       return <MenuItem /*index={index}*/ style={{marginTop:'10%', fontSize: '400%',height:'200%',width:'100%'}} value={value.name} primaryText={`${value.name} ${value.attends}/${value.limit} `} disabled={value.isBlocked||value.attends===value.limit} />
@@ -45,7 +45,7 @@ const style = {
       // <SelectField onChange={(e,i,v) => this.props.checkInUser(user,masterClasses[i].name,index)}>
       // {masterClasses.map(selectMasterClassElement)}
       // </SelectField>
-    const selectMasterClassDropDown=masterClasses?masterClasses.map((value,index)=>{
+    const selectMasterClassDropDown=masterclasses?masterclasses.map((value,index)=>{
       return    <SelectField value={user[date]?user[date][index]:null} labelStyle={{}} style={{ marginTop:'20%', paddingTop:'3%', marginBottom:'10%', fontSize: '70%',width:'100%'}} floatingLabelText={`Section ${index}`} onChange={(e,i,v) => {this.props.checkInUser(user,v,index)}}>
       {Object.keys(value).map(key=>selectMasterClassElement(value[key])) }
       </SelectField>
@@ -77,7 +77,7 @@ const mapStateToProps = (state, ownProps) => {
   console.log(state.combineReducer)
   return {
       user:state.combineReducer.user,
-      masterClasses:state.combineReducer.masterclasses  
+      masterclasses:state.combineReducer.masterclasses  
   }
 }
 

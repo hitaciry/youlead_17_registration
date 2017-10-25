@@ -73,6 +73,7 @@ export const decrementMasterClassAttendee =async id=>{
 } 
 export const getMasterClasses = async () =>{
   const masterclasses=await db.ref('MasterClasses').once('value',(data)=>data).catch(console.log)
+  
   return updateMasterClasses(masterclasses.val())
 } 
 export const getMasterClassesForUser = async (date,section) =>{
@@ -89,9 +90,10 @@ export const addUser = async (user)=>{
   return{type:ADD_USER,user:user, response:response }
 }
 
-export const changeRegistrationState=async (path) => {
-  const response = await db.ref(path+'/isBlosked').set(true)
-  return {trype:CHANGE_REGISTRATION_STATE, response:response }
+export const changeRegistrationState=async (path, state) => {
+  const response = await db.ref(path+'/isBlocked').set(!state)
+  console.log(response)
+  return {type:CHANGE_REGISTRATION_STATE, response:response }
 } 
 export const getUsers = async()=>{
   const users= await db.ref('Users').once('value',(data)=>data).catch(console.log)
