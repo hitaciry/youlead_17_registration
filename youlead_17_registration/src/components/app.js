@@ -26,12 +26,12 @@ return(
             <Route exact path='/dashboard/users' render={({ history}) =><Dashboard history={history}><UsersTable/></Dashboard>}/>
             <Route exact path='/dashboard/masterclass' render={({ history}) =><Dashboard history={history}><MasterClassTable/></Dashboard>} />
             <Route exact path="/">
-                <div>
-                    <Link to="/getqrcode" >qr code</Link>
-                    <Link to="/registration">registration</Link>
-                    <Link to="/checkin/(:userId)">check in</Link>
-                    <Link to="/dashboard" >dashboard</Link>
-                </div>
+                <ul>
+                    <li><Link to="/getqrcode" >qr code</Link></li>
+                    <li><Link to="/registration">registration</Link></li>
+                    <li><Link to="/checkin/(:userId)">check in</Link></li>
+                    <li><Link to="/dashboard" >dashboard</Link></li>
+                </ul>
             </Route>
             </Switch>
         </BrowserRouter>

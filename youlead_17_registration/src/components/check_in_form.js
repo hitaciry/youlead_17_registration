@@ -18,10 +18,10 @@ const style = {
  class CheckInForm extends Component{
   componentDidMount(){
     if(!this.props.user){
-      this.props.getUser().then(r=>{      
-        this.props.getMasterClassesForUser(date,this.props.user.section)
-      })
+      this.props.getUser().then((r)=>{
+        return this.props.getMasterClassesForUser(date,this.props.user.section)})
     }
+      
   }
   constructor(props) {
     super(props);
@@ -38,16 +38,13 @@ const style = {
   render(){    
     const user = this.props.user
     const masterclasses = this.props.masterclasses
+    console.log(masterclasses)
     const selectMasterClassElement = (value)=>{
-      console.log(value)
-      return <MenuItem /*index={index}*/ style={{marginTop:'10%', fontSize: '400%',height:'200%',width:'100%'}} value={value.name} primaryText={`${value.name} ${value.attends}/${value.limit} `} disabled={value.isBlocked||value.attends===value.limit} />
+      return <MenuItem key={value.key} index={value.key} style={{marginTop:'10%', fontSize: '400%',height:'200%',width:'100%'}} value={{key:value.key,name:value.name}} primaryText={`${value.name} ${value.attends}/${value.limit} `} disabled={value.isBlocked||value.attends===value.limit} />
     }
-      // <SelectField onChange={(e,i,v) => this.props.checkInUser(user,masterClasses[i].name,index)}>
-      // {masterClasses.map(selectMasterClassElement)}
-      // </SelectField>
-    const selectMasterClassDropDown=masterclasses?masterclasses.map((value,index)=>{
-      return    <SelectField value={user[date]?user[date][index]:null} labelStyle={{}} style={{ marginTop:'20%', paddingTop:'3%', marginBottom:'10%', fontSize: '70%',width:'100%'}} floatingLabelText={`Section ${index}`} onChange={(e,i,v) => {this.props.checkInUser(user,v,index)}}>
-      {Object.keys(value).map(key=>selectMasterClassElement(value[key])) }
+    const selectMasterClassDropDown=masterclasses?masterclasses.filter(f=>f!==undefined).map((value,index)=>{      
+      return <SelectField value={} labelStyle={{}} style={{ marginTop:'20%', paddingTop:'3%', marginBottom:'10%', fontSize: '70%',width:'100%'}} onChange={(e,i,v) =>this.props.checkInUser(user,i,v.key,v.name)} floatingLabelText={`Section ${index}`}  >
+      {value.map(m=>{return selectMasterClassElement(m)}) }
       </SelectField>
     }):false  
     return<MuiThemeProvider>
@@ -58,10 +55,10 @@ const style = {
         <br/>
         {this.state.secret && 
           <div>
-          {masterClasses ?
+          {masterclasses ?
           selectMasterClassDropDown?
             selectMasterClassDropDown:
-            <RaisedButton value='' />        
+            <RaisedButton label='Check in' />        
 
           :
           <div>Loading...</div>
@@ -74,10 +71,9 @@ const style = {
 } 
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(state.combineReducer)
   return {
       user:state.combineReducer.user,
-      masterclasses:state.combineReducer.masterclasses  
+      masterclasses:!state.combineReducer.masterclasses?null:Object.values(state.combineReducer.masterclasses)  
   }
 }
 
@@ -90,8 +86,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     getMasterClassesForUser: async (date,section)=>{
       return getMasterClassesForUser(date,section).then(dispatch)
     },
-    checkInUser:(user,masterClassName,masterClassTime)=>{
-      userCheckIn(user,masterClassName,masterClassTime, dispatch)
+    checkInUser:(user,time, masterClassId,masterClassName)=>{
+      userCheckIn(user,time, masterClassId,masterClassName, dispatch)
     }
   }
 }

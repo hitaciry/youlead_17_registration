@@ -19,7 +19,6 @@ const style = {
 class GetQRCodeForm extends Component{
   constructor(props) {
     super(props)
-    this.findUser=this.findUser.bind(this)
     this.changeState=this.changeState.bind(this)
   }
   changeState(e){
@@ -38,10 +37,6 @@ class GetQRCodeForm extends Component{
   
     this.href = link;
   } 
-  findUser(event){
-    console.log(this.props)
-    this.props.getUser(this.state.email)
-  }
   render(){
     return <MuiThemeProvider>
       <Paper style={style} zDepth={1}>
@@ -50,7 +45,7 @@ class GetQRCodeForm extends Component{
           <div>
             <p>Please Enter Your registration Email</p>
             <TextField name="email" hintText="Input email" type="email" onChange={this.changeState} />
-            <FlatButton onClick={this.findUser} label="Search" />
+            <FlatButton onClick={(e)=>this.props.getUser(this.state.email)} label="Search" />
           </div>
         :
           <div>
@@ -59,7 +54,7 @@ class GetQRCodeForm extends Component{
 
             <QRCode value={window.location.protocol+'//'+window.location.host+'/checkin/'+this.props.user.key }/>
             <IconButton tooltip="Download" onClick={this.download}>
-              <FontIcon className="file_download" />
+              <FontIcon className="file_download" label="Download" />
             </IconButton>
           </div>
         }

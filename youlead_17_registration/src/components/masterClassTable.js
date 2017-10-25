@@ -17,10 +17,8 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 const date = new Date().toLocaleDateString('ru').split('.').join('')
 
 const mapStateToProps = (state, ownProps) => {
-  const map2= !state.combineReducer.masterclasses?null:[].concat.apply([],[].concat.apply([],[].concat.apply([],Object.values(state.combineReducer.masterclasses[date]))).filter(f=>f!==undefined).map(Object.values))
-  
   return {
-      masterclasses: map2  
+      masterclasses: !state.combineReducer.masterclasses?null:Object.values(state.combineReducer.masterclasses)  
   }
 }
 
@@ -62,7 +60,7 @@ class MasterClassTable extends Component{
                     checkedIcon={<ActionFavorite />}
                     uncheckedIcon={<ActionFavoriteBorder />}
                     checked={item.isBlocked}
-                    onCheck={(e)=>this.props.changeRegistrationState(`MasterClasses/${date}/${item.section}/${item.time}/${item.name}`,item.isBlocked)}
+                    onCheck={(e)=>this.props.changeRegistrationState(item.key,item.isBlocked)}
                   />
                   </TableRowColumn>
                   <TableRowColumn style={{textAlign:'center'}}>{item.attends}</TableRowColumn>

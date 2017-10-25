@@ -59,11 +59,11 @@ class UsersTable extends Component{
                     checkedIcon={<ActionFavorite />}
                     uncheckedIcon={<ActionFavoriteBorder />}
                     disabled={true}
-                    checked={user[24102017]}
+                    checked={user[date]}
                     //onCheck={(e)=>this.props.changeRegistrationState($`user/${user.id}`)}
                   />
                   </TableRowColumn>
-                  <TableRowColumn>{user[24102017]&&user[24102017].filter(f=>f!==undefined).join()}</TableRowColumn>
+                  <TableRowColumn>{user[date]&&Object.values( user[date]).filter(f=>f!==undefined).join()}</TableRowColumn>
                     </TableRow>
               })}              
               </TableBody>
