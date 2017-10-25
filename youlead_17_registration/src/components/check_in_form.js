@@ -49,7 +49,7 @@ const style = {
       return    <SelectField value={user[date]?user[date][index]:null} labelStyle={{}} style={{ marginTop:'20%', paddingTop:'3%', marginBottom:'10%', fontSize: '70%',width:'100%'}} floatingLabelText={`Section ${index}`} onChange={(e,i,v) => {this.props.checkInUser(user,v,index)}}>
       {Object.keys(value).map(key=>selectMasterClassElement(value[key])) }
       </SelectField>
-    }):null  
+    }):false  
     return<MuiThemeProvider>
       <Paper style={style} zDepth={1}>
         <p>Welcome to YouLead {new Date().getFullYear()} Checkin page! </p>
@@ -59,7 +59,10 @@ const style = {
         {this.state.secret && 
           <div>
           {masterClasses ?
-          selectMasterClassDropDown
+          selectMasterClassDropDown?
+            selectMasterClassDropDown:
+            <RaisedButton value='' />        
+
           :
           <div>Loading...</div>
           }
