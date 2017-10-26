@@ -47,7 +47,7 @@ export const userCheckIn = async (user,time, masterClassId,masterClassName, disp
     if(user[date][time]===prop)
       return;
     else
-      dispatch(await decrementMasterClassAttendee(masterClassId))
+      dispatch(await decrementMasterClassAttendee(Object.keys(user[date][time])[0]))
   }else{
     if(!user[date]) user[date]={}
     if(!user[date][time]) user[date][time]={}
@@ -76,7 +76,7 @@ export const getMasterClasses = async () =>{
 } 
 export const getMasterClassesForUser = async (date,section) =>{
   const masterclasses=await db.ref(`MasterClasses`).once('value',(data)=>data).catch(console.log)
-  return updateMasterClasses(Object.values(masterclasses.val()).filter(f=>f.date===date&&(f.section||f.section===section)).reduce((res,next)=>{res[next.time]?res[next.time].push(next):res[next.time]=[next];return res},[]))
+  return updateMasterClasses(Object.values(masterclasses.val()).filter(f=>f.date===date&&(!f.section||f.section===section)).reduce((res,next)=>{res[next.time]?res[next.time].push(next):res[next.time]=[next];return res},[]))
 }
 
 export const updateMasterClasses= (masterclasses) =>({type:UPDATE_MASTER_CLASSES,masterclasses})

@@ -11,13 +11,13 @@ import { connect } from 'react-redux'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 const style = {
-  margin:'5%',
-  fontSize: '500%',
-  height:'100%',
+  margin:20,
+  padding:20,
+  fontSize: '400%',
   overflow:'none',
   textAlign: 'center'
 }
-const textFieldStyle={marginTop:'10%',  fontSize: '100%',height:'20%',width:'100%'}
+const textFieldStyle={  fontSize: '100%',height:'20%',width:'100%'}
 const mapStateToProps = (state, ownProps) => {
   return {
       user:state.combineReducer.user,
@@ -43,26 +43,32 @@ class RegistrationForm extends Component{
       this.props.getEmails().then(
         this.state = {fetchingEmails:false,
         emails:props.emails,
-        secretWord: "my secret",
+        secretWord: "@",
         secret:false,
         email_error:null,
         user:{
           id: uuidv4(),
           name: null,
           section: null,
-          emailAddress: null } 
+          spec: null,
+          emailAddress: null,
+          phone:null,
+          city:null  }
         } )
     } 
     this.state = {
         emails:props.emails,
-        secretWord: "my secret",
+        secretWord: "@",
         secret:false,
         email_error:null,
         user:{
           key: uuidv4(),
           name: null,
           section: null,
-          emailAddress: null
+          spec: null,
+          emailAddress: null,
+          phone:null,
+          city:null
         }
       }
     console.log(this.state)
@@ -93,10 +99,20 @@ class RegistrationForm extends Component{
         <TextField style={textFieldStyle} defaultValue={this.state.secretWord}  hintText='Input secret' type='password' val={this.state.secretWord} onChange={this.checkSecret} />
         {this.state.secret &&
           <div>
+            <br/>
             <TextField style={textFieldStyle} name = 'email' floatingLabelText='Input email'  val={this.state.user.email} errorText={this.state.email_error} onChange={(event)=>this.emailValidation(event,this.props.emails)}/>
+            <br/>
             <TextField style={textFieldStyle} name = 'name' floatingLabelText='Input name' val={this.state.user.name} onChange={this.changeState} />
+            <br/>
+            <TextField style={textFieldStyle} name = 'phone' floatingLabelText='Input phone' val={this.state.user.section} onChange={this.changeState} />
+            <br/>
             <TextField style={textFieldStyle} name = 'section' floatingLabelText='Input section' val={this.state.user.section} onChange={this.changeState} />
-            <FlatButton primary={true} style={{ height:'400%',width:'100%', overflow:'none', margin:'10%'}} labelStyle={{marginTop:'10%',  fontSize: '100%',height:'40%',width:'100%'}} onClick={(e)=>this.props.addUser(this.state.user).then(this.setState({showlink:true}))} label='Create'/>
+            <br/>
+            <TextField style={textFieldStyle} name = 'spec' floatingLabelText='Input spec' val={this.state.user.section} onChange={this.changeState} />
+            <br/>
+            <TextField style={textFieldStyle} name = 'city' floatingLabelText='Input city' val={this.state.user.section} onChange={this.changeState} />
+            <br/>
+            <FlatButton primary={true} style={{ height:'400%',width:'100%', overflow:'none'}} labelStyle={{marginTop:'10%',  fontSize: '100%',height:'40%',width:'100%'}} onClick={(e)=>this.props.addUser(this.state.user).then(this.setState({showlink:true}))} disabled={!this.state.user.name&&!this.state.user.emailAddress} label='Create'/>
           </div>
         }
         {this.state.showlink &&

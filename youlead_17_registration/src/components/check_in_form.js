@@ -12,21 +12,22 @@ const date =(new Date()).toLocaleDateString('ru').split('.').join('')
 const style = {
   margin: 20,
   padding: 20,
-  fontSize: '500%',
-  height:'100%'
+  height:'400%',
+  width:'100%',
+  fontSize:'300%',
+  overflow:'none',
+  textAlign: 'center'
 };
  class CheckInForm extends Component{
   componentDidMount(){
-    if(!this.props.user){
-      this.props.getUser().then((r)=>{
-        return this.props.getMasterClassesForUser(date,this.props.user.section)})
-    }
-      
+    if(!this.props.user)
+      this.props.getUser().then(u=>
+        this.props.getMasterClassesForUser(date,u.section))   
   }
   constructor(props) {
     super(props);
     this.state = {
-      secretWord: "my secret",
+      secretWord: "@",
       secret:false
     }
     this.checkSecret=this.checkSecret.bind(this)
@@ -40,28 +41,30 @@ const style = {
     const masterclasses = this.props.masterclasses
     console.log(masterclasses)
     const selectMasterClassElement = (value)=>{
-      return <MenuItem key={value.key} index={value.key} style={{marginTop:'10%', fontSize: '400%',height:'200%',width:'100%'}} value={{key:value.key,name:value.name}} primaryText={`${value.name} ${value.attends}/${value.limit} `} disabled={value.isBlocked||value.attends===value.limit} />
+      return <MenuItem  key={value.key} style={{marginTop:'10%', fontSize: '400%',height:'200%',width:'100%'}} value={value.key} primaryText={`${value.name} ${value.attends}/${value.limit} `} disabled={value.isBlocked||value.attends===value.limit} />
     }
-    const selectMasterClassDropDown=masterclasses?masterclasses.filter(f=>f!==undefined).map((value,index)=>{      
-      return <SelectField value={} labelStyle={{}} style={{ marginTop:'20%', paddingTop:'3%', marginBottom:'10%', fontSize: '70%',width:'100%'}} onChange={(e,i,v) =>this.props.checkInUser(user,i,v.key,v.name)} floatingLabelText={`Section ${index}`}  >
+    const selectMasterClassDropDown=masterclasses?masterclasses.filter(f=>f!==undefined).map((value,index)=>{
+      console.log(user[date][index],index)
+      const val= (user&&user[date]&&user[date][index])? Object.keys(user[date][index])[0]:null
+      const st ={ fontSize: '100%', paddingTop:'3%',width:'100%'}
+      const oncl=(e,i,v) =>this.props.checkInUser(user,index,v,value.filter(f=>f.key===v)[0].name)
+      return <SelectField style={{marginTop:40}} value={val} style={st} onChange={oncl} floatingLabelText={`Section ${index}`}  >
       {value.map(m=>{return selectMasterClassElement(m)}) }
       </SelectField>
     }):false  
     return<MuiThemeProvider>
       <Paper style={style} zDepth={1}>
         <p>Welcome to YouLead {new Date().getFullYear()} Checkin page! </p>
-        
-        <TextField style={{marginTop:'10%',  fontSize: '100%',height:'20%',width:'100%'}} hintText="Input secret" defaultValue={this.state.secretWord} onChange={this.checkSecret} />
+        <p>{this.props.user===null?"User not found":this.props.user && this.props.user.name}</p> 
+        <TextField type='password' style={{  fontSize: '100%',height:'20%',width:'100%'}} hintText="Input secret" defaultValue={this.state.secretWord} onChange={this.checkSecret} />
         <br/>
         {this.state.secret && 
           <div>
           {masterclasses ?
-          selectMasterClassDropDown?
-            selectMasterClassDropDown:
-            <RaisedButton label='Check in' />        
-
-          :
-          <div>Loading...</div>
+            selectMasterClassDropDown?
+              selectMasterClassDropDown:
+              <RaisedButton label='Check in' />
+            :<p>Loading...</p>
           }
           </div>
         }
@@ -73,7 +76,7 @@ const style = {
 const mapStateToProps = (state, ownProps) => {
   return {
       user:state.combineReducer.user,
-      masterclasses:!state.combineReducer.masterclasses?null:Object.values(state.combineReducer.masterclasses)  
+      masterclasses:state.combineReducer.masterclasses 
   }
 }
 
@@ -81,7 +84,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
   return {
     getUser: async () => {
-      return getUser(ownProps.match.params.userId).then(dispatch)
+      return getUser(ownProps.match.params.userId).then(a=>{dispatch(a);return a.user})
     },
     getMasterClassesForUser: async (date,section)=>{
       return getMasterClassesForUser(date,section).then(dispatch)
