@@ -6,7 +6,7 @@ import MenuItem from 'material-ui/MenuItem'
 import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import { connect } from 'react-redux'
-import { getUser,getMasterClassesForUser,userCheckIn} from '../actions'
+import { getUser,getMasterClassesForUser,userCheckIn,updateUser} from '../actions'
 
 const date =(new Date()).toLocaleDateString('ru').split('.').join('')
 const style = {
@@ -52,24 +52,21 @@ const style = {
       {value.map(m=>{return selectMasterClassElement(m)}) }
       </SelectField>
     }):false  
-    return<MuiThemeProvider>
-      <Paper style={style} zDepth={1}>
+    return <Paper style={style} zDepth={1}>
         <p>Welcome to YouLead {new Date().getFullYear()} Checkin page! </p>
         <p>{this.props.user===null?"User not found":this.props.user && this.props.user.name}</p> 
         <TextField type='password' style={{  fontSize: '100%',height:'20%',width:'100%'}} hintText="Input secret" defaultValue={this.state.secretWord} onChange={this.checkSecret} />
         <br/>
         {this.state.secret && 
-          <div>
-          {masterclasses ?
-            selectMasterClassDropDown?
-              selectMasterClassDropDown:
+            masterclasses ?<div>
+            selectMasterClassDropDown
+              <TextField style={{  fontSize: '100%',height:'20%',width:'100%'}} hintText ='Emergency phone' defaultValue={user.emegency_phone} onChange={(event, value)=>this.props.updateUser(Object.assign({},user,{emegency_phone:value}))} />
+              <TextField style={{  fontSize: '100%',height:'20%',width:'100%'}} hintText ='Details' multiLine={true} defaultValue={user.details} onChange={(event, value)=>this.props.updateUser(Object.assign({},user,{details:value}))} />
               <RaisedButton label='Check in' />
+              </div>
             :<p>Loading...</p>
-          }
-          </div>
         }
       </Paper>
-      </MuiThemeProvider>
   }
 } 
 
@@ -83,6 +80,9 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
 
   return {
+    updateUser: (user)=>{
+      updateUser(user).then(dispatch)
+    },
     getUser: async () => {
       return getUser(ownProps.match.params.userId).then(a=>{dispatch(a);return a.user})
     },

@@ -8,12 +8,13 @@ import Dashboard from './dashboard'
 import UsersTable from './usersTable'
 import MasterClassTable from './masterClassTable'
 import {Link,Route, BrowserRouter,Switch } from 'react-router-dom'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import React from 'react'
 
 const App = store=>{
 
 return(
-     <div>
+     <MuiThemeProvider>
         <ErrorHandler errror={store.error}/>
         <ResponseHandler responce={store.responce} />
         {/* Tell the Router to use our enhanced history */} 
@@ -26,15 +27,17 @@ return(
             <Route exact path='/dashboard/users' render={({ history}) =><Dashboard history={history}><UsersTable/></Dashboard>}/>
             <Route exact path='/dashboard/masterclass' render={({ history}) =><Dashboard history={history}><MasterClassTable/></Dashboard>} />
             <Route exact path="/">
-                <ul>
-                    <li><Link to="/getqrcode" >qr code</Link></li>
-                    <li><Link to="/registration">registration</Link></li>
-                    <li><Link to="/checkin/(:userId)">check in</Link></li>
-                    <li><Link to="/dashboard" >dashboard</Link></li>
-                </ul>
+                {
+                // <ul>
+                //     <li><Link to="/getqrcode" >qr code</Link></li>
+                //     <li><Link to="/registration">registration</Link></li>
+                //     <li><Link to="/checkin/(:userId)">check in</Link></li>
+                //     <li><Link to="/dashboard" >dashboard</Link></li>
+                // </ul>
+                }
             </Route>
             </Switch>
         </BrowserRouter>
-    </div>
+    </MuiThemeProvider>
 )}
 export default App
