@@ -12,11 +12,11 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import React from 'react'
 
 const App = store=>{
-
+console.log(store)
 return(
-     <MuiThemeProvider>
-        {store.error&&<ErrorHandler error={store.error}/>}
-        <ResponseHandler responce={store.responce} />
+     <MuiThemeProvider><div>
+        <ErrorHandler />
+        {store.respoce&&<ResponseHandler responce={store.responce} />}
         {/* Tell the Router to use our enhanced history */} 
         <BrowserRouter > 
             <Switch>       
@@ -37,7 +37,7 @@ return(
                 }
             </Route>
             </Switch>
-        </BrowserRouter>
+        </BrowserRouter></div>
     </MuiThemeProvider>
 )}
 export default App

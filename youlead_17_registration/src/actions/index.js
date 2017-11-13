@@ -23,9 +23,10 @@ export const getUsersEmails= async ()=>{
 }
 export const getUserByMail= async email=>{
   const user= await db.ref('Users').orderByChild('emailAddress').equalTo(email).once('value',(data)=>data)
-  const user_=Object.assign(user.val()[Object.keys(user.val())[0]],{key:Object.keys(user.val())[0]})
-  if(user_)
+  if(user.val()){
+    const user_=Object.assign(user.val()[Object.keys(user.val())[0]],{key:Object.keys(user.val())[0]})
     return {type:GET_USER, user:user_ }
+  }
   else
     return {type:ERROR, error:'Пользователь не найден'}
 }

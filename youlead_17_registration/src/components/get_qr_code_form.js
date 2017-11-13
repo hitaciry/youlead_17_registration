@@ -9,6 +9,7 @@ import Paper from 'material-ui/Paper'
 import QRCode from 'qrcode.react'
 import { connect } from 'react-redux'
 import IconButton from 'material-ui/IconButton'
+import CircularProgress from 'material-ui/CircularProgress'
 
 const style = {
   padding: 20,
@@ -20,6 +21,9 @@ const textFieldStyle={  fontSize: '100%',height:'20%',width:'100%'}
 class GetQRCodeForm extends Component{
   constructor(props) {
     super(props)
+    this.state={
+      load:false
+    }
     this.changeState=this.changeState.bind(this)
   }
   changeState(e){
@@ -50,7 +54,8 @@ class GetQRCodeForm extends Component{
             <br/>
             <TextField style={textFieldStyle} name="email" hintText="Введите email" type="email" onChange={this.changeState} />
             <br/>
-            <FlatButton style={{ height:'400%', overflow:'none', textAlign:'right' }} labelStyle={{marginTop:'10%',  fontSize: '100%',height:'40%'}} onClick={(e)=>this.props.getUser(this.state.email)} label="Поиск" />
+            {this.state.load&&<CircularProgress size={80} thickness={5} style={{ display:'flex', justifyContent:'center', width:350,   margin:'auto' }}/>}
+            <FlatButton style={{ height:'400%', overflow:'none', textAlign:'right' }} labelStyle={{marginTop:'10%',  fontSize: '100%',height:'40%'}} onClick={(e)=>{this.setState({load:true});this.props.getUser(this.state.email).then(this.setState({load:false}))}} label="Поиск" />
           </div>
         :
           <div>
@@ -77,8 +82,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    getUser: (email) => {
-      getUserByMail(email).then(dispatch)
+    getUser:  (email) => {
+      return getUserByMail(email).then(dispatch)
     }
   }
 }
