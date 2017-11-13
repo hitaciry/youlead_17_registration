@@ -43,19 +43,19 @@ class GetQRCodeForm extends Component{
   render(){
     return <MuiThemeProvider>
       <Paper style={style} zDepth={1}>
-        <p>Welcome to YouLead {new Date().getFullYear()} Preregistration! </p>
+        <p>Добро пожаловать на страницу предварительной регистрации YouLead {new Date().getFullYear()}! </p>
         {!this.props.user?
           <div>
-            <p>Please Enter Your registration Email</p>
+            <p>Пожалуйста, введите ваш Email</p>
             <br/>
-            <TextField style={textFieldStyle} name="email" hintText="Input email" type="email" onChange={this.changeState} />
+            <TextField style={textFieldStyle} name="email" hintText="Введите email" type="email" onChange={this.changeState} />
             <br/>
-            <FlatButton style={{ height:'400%', overflow:'none', textAlign:'rigth' }} labelStyle={{marginTop:'10%',  fontSize: '100%',height:'40%'}} onClick={(e)=>this.props.getUser(this.state.email)} label="Search" />
+            <FlatButton style={{ height:'400%', overflow:'none', textAlign:'right' }} labelStyle={{marginTop:'10%',  fontSize: '100%',height:'40%'}} onClick={(e)=>this.props.getUser(this.state.email)} label="Поиск" />
           </div>
         :
           <div>
-            <p> Thank You, <strong>{this.props.user.name}</strong>, for Preregistration!<br/>
-             Please, show this code to our volunteers and get Your gifts</p>
+            <p> Спасибо, <strong>{this.props.user.name}</strong>!<br/>
+             Пожалуйста, предъявите данный код волонтерам на площадке форума</p>
 
             <QRCode size={512} value={window.location.protocol+'//'+window.location.host+'/checkin/'+this.props.user.key }/><br/>
             <a id='link' href="#" ></a><IconButton style={{ width: 220, height: 220, padding: 30}} iconStyle={{width: 160, height: 160,}} tooltip="Download" onClick={(e)=>this.download(e,this.props.user.name)} >

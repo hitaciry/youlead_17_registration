@@ -53,7 +53,7 @@ const style = {
       </SelectField>
     }):false  
     return <Paper style={style} zDepth={1}>
-        <p>Welcome to YouLead {new Date().getFullYear()} Checkin page! </p>
+        <p>Доборо пожаловать на YouLead {new Date().getFullYear()}! </p>
         <p>{this.props.user===null?"User not found":this.props.user && this.props.user.name}</p> 
         <TextField type='password' style={{  fontSize: '100%',height:'20%',width:'100%'}} hintText="Input secret" defaultValue={this.state.secretWord} onChange={this.checkSecret} />
         <br/>

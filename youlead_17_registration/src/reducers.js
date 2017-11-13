@@ -15,7 +15,7 @@ function combineReducer(state={},action){
     case GET_USERS_EMAILS:
     return Object.assign({},state,{emails:action.emails})
     case ERROR:
-    return Object.assign({},state,{error:action})
+    return Object.assign({},state,{error:action.error})
     default:
     return state
   }

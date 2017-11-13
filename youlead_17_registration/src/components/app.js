@@ -15,7 +15,7 @@ const App = store=>{
 
 return(
      <MuiThemeProvider>
-        <ErrorHandler errror={store.error}/>
+        {store.error&&<ErrorHandler error={store.error}/>}
         <ResponseHandler responce={store.responce} />
         {/* Tell the Router to use our enhanced history */} 
         <BrowserRouter > 
