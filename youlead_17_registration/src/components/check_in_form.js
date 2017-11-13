@@ -22,11 +22,13 @@ const style = {
   componentDidMount(){
     if(!this.props.user)
       this.props.getUser().then(u=>
-        this.props.getMasterClassesForUser(date,u.section))   
+        this.props.getMasterClassesForUser(date,u.section)
+        .then(this.setState({getMC:false})))   
   }
   constructor(props) {
     super(props);
     this.state = {
+      getMC:true,
       secretWord: "@",
       secret:false
     }
@@ -39,7 +41,7 @@ const style = {
   render(){    
     const user = this.props.user
     const masterclasses = this.props.masterclasses
-    console.log(masterclasses)
+    const date =(new Date()).toLocaleDateString('ru').split('.').join('')
     const selectMasterClassElement = (value)=>{
       return <MenuItem  key={value.key} style={{marginTop:'10%', fontSize: '400%',height:'200%',width:'100%'}} value={value.key} primaryText={`${value.name} ${value.attends}/${value.limit} `} disabled={value.isBlocked||value.attends===value.limit} />
     }
@@ -48,23 +50,27 @@ const style = {
       const val= (user&&user[date]&&user[date][index])? Object.keys(user[date][index])[0]:null
       const st ={ fontSize: '100%', paddingTop:'3%',width:'100%'}
       const oncl=(e,i,v) =>this.props.checkInUser(user,index,v,value.filter(f=>f.key===v)[0].name)
-      return <SelectField style={{marginTop:40}} value={val} style={st} onChange={oncl} floatingLabelText={`Section ${index}`}  >
+      return <SelectField value={val} style={st} onChange={oncl} floatingLabelText={`Section ${index}`}  >
       {value.map(m=>{return selectMasterClassElement(m)}) }
       </SelectField>
     }):false  
     return <Paper style={style} zDepth={1}>
         <p>Доборо пожаловать на YouLead {new Date().getFullYear()}! </p>
         <p>{this.props.user===null?"User not found":this.props.user && this.props.user.name}</p> 
-        <TextField type='password' style={{  fontSize: '100%',height:'20%',width:'100%'}} hintText="Input secret" defaultValue={this.state.secretWord} onChange={this.checkSecret} />
+        <TextField type='password' style={{  fontSize: '100%',height:'20%',width:'100%'}} floatingLabelText="Input secret" defaultValue={this.state.secretWord} onChange={this.checkSecret} />
         <br/>
         {this.state.secret && 
-            masterclasses ?<div>
-            selectMasterClassDropDown
-              <TextField style={{  fontSize: '100%',height:'20%',width:'100%'}} hintText ='Emergency phone' defaultValue={user.emegency_phone} onChange={(event, value)=>this.props.updateUser(Object.assign({},user,{emegency_phone:value}))} />
-              <TextField style={{  fontSize: '100%',height:'20%',width:'100%'}} hintText ='Details' multiLine={true} defaultValue={user.details} onChange={(event, value)=>this.props.updateUser(Object.assign({},user,{details:value}))} />
-              <RaisedButton label='Check in' />
+            <div>
+            {this.state.getMC?
+            <p>Loading MC...</p>:
+            selectMasterClassDropDown}
+              <TextField style={{  fontSize: '100%',height:'20%',width:'100%'}} floatingLabelText ='Emergency phone' defaultValue={user.emegency_phone} onChange={(event, value)=>this.props.updateUser(Object.assign({},user,{emegency_phone:value}))} />
+              <TextField style={{  fontSize: '100%',height:'20%',width:'100%'}} floatingLabelText ='Details' multiLine={true} defaultValue={user.details} onChange={(event, value)=>this.props.updateUser(Object.assign({},user,{details:value}))} />
+              <RaisedButton 
+                label='Check in (if MC is empty)' 
+                onClick={this.props.updateUser(Object.assign({},user,{[date]:true}))} 
+                disabled={this.state.getMC&&masterclasses}/>
               </div>
-            :<p>Loading...</p>
         }
       </Paper>
   }
