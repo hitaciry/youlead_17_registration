@@ -16,7 +16,12 @@ const Dashboard =({history,children})=>(
           <Tab label="Master Classes"
           value='/dashboard/masterclass'
           onActive={()=>{history.push('/dashboard/masterclass')}}
-          />            
+          />         
+          
+          <Tab label="Sections Statistics"
+          value='/dashboard/sectionstat'
+          onActive={()=>{history.push('/dashboard/sectionstat')}}
+          />     
         </Tabs>
 {children}
     </MuiThemeProvider>

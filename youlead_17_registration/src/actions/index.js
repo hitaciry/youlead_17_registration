@@ -12,6 +12,7 @@ export const UPDATE_MASTER_CLASSES = 'UPDATE_MASTER_CLASSES'
 export const UPDATE_USERS = 'UPDATE_USERS'
 export const ADD_USER = 'ADD_USER'
 export const CHANGE_REGISTRATION_STATE ='CHANGE_REGISTRATION_STATE'
+export const GET_SECTION_STATISTICS='GET_SECTION_STATISTICS'
 
 export const getUsersEmails= async ()=>{
   const emails = await db.ref('Users').once('value',(data)=>data).catch(console.log)
@@ -101,4 +102,17 @@ export const changeRegistrationState=async (id, state) => {
 export const getUsers = async()=>{
   const users= await db.ref('Users').once('value',(data)=>data).catch(console.log)
   return {type:GET_USERS, users:users.val()}
+}
+export const getSectionStatistics=async ()=>{
+  const date =(new Date()).toLocaleDateString('ru').split('.').join('')
+  const users= await db.ref('Users').once('value',(data)=>data)
+  const section_stat =Object.values( users.val())
+    .reduce((prev,cur,i)=>{
+      if(!prev[cur.section])
+        prev[cur.section]=0
+      if(cur[date])
+        prev[cur.section]++
+      return prev
+  },{})
+  return {type:GET_SECTION_STATISTICS, section_stat:section_stat}
 }

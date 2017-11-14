@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { GET_USERS,UPDATE_MASTER_CLASSES,UPDATE_USER,ERROR,GET_USER,GET_USERS_EMAILS,ADD_USER, INCREMENT_MASTER_CLASS, CHANGE_REGISTRATION_STATE, DECREMENT_MASTER_CLASS} from './actions'
+import { GET_USERS,UPDATE_MASTER_CLASSES,UPDATE_USER,ERROR,GET_USER,GET_USERS_EMAILS,ADD_USER, INCREMENT_MASTER_CLASS, CHANGE_REGISTRATION_STATE, DECREMENT_MASTER_CLASS,GET_SECTION_STATISTICS} from './actions'
 function combineReducer(state={},action){
   switch(action.type){
     case UPDATE_MASTER_CLASSES:
@@ -16,6 +16,8 @@ function combineReducer(state={},action){
     return Object.assign({},state,{emails:action.emails})
     case ERROR:
     return Object.assign({},state,{error:action.error})
+    case GET_SECTION_STATISTICS:
+    return Object.assign({},state,{section_stat:action.section_stat})
     default:
     return state
   }

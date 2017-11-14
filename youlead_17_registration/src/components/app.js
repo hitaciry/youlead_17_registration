@@ -7,6 +7,7 @@ import ResponseHandler from './response_handler'
 import Dashboard from './dashboard'
 import UsersTable from './usersTable'
 import MasterClassTable from './masterClassTable'
+import SectionStatisticsTable from './sections_statistics'
 import {Link,Route, BrowserRouter,Switch } from 'react-router-dom'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import React from 'react'
@@ -26,6 +27,7 @@ return(
             <Route exact path="/dashboard" render={({ history}) =><Dashboard history={history}><p>Select tab</p></Dashboard>}/>
             <Route exact path='/dashboard/users' render={({ history}) =><Dashboard history={history}><UsersTable/></Dashboard>}/>
             <Route exact path='/dashboard/masterclass' render={({ history}) =><Dashboard history={history}><MasterClassTable/></Dashboard>} />
+            <Route exact path='/dashboard/sectionstat' render={({ history}) =><Dashboard history={history}><SectionStatisticsTable/></Dashboard>} />
             <Route exact path="/">
                 {
                 // <ul>
