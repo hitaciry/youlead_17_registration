@@ -42,7 +42,7 @@ class SectionStatisticsTable extends Component{
   render(){
     return<div>
             {this.state.load?<CircularProgress size={80} thickness={5} style={{ display:'flex', justifyContent:'center', width:350,   margin:'auto' }}/>
-              :<Table fixedHeader={true} fixedFooter={true} height={'400pt'} displayRowCheckbox={false}>>
+              :<Table  displayRowCheckbox={false} fixedHeader={true} fixedFooter={true} height={'400pt'} displayRowCheckbox={false}>>
                 <TableHeader>
                   <TableRow>
                     <TableHeaderColumn>Status</TableHeaderColumn>
