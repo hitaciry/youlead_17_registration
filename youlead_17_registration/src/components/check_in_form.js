@@ -66,7 +66,7 @@ const style = {
   }
         <TextField type='password' style={{  fontSize: '100%',height:'20%',width:'100%'}} floatingLabelText="Input secret" onChange={this.checkSecret} />
         <br/>
-        {!this.state.secret&& user && 
+        {this.state.secret&& user && 
             <div>
             {this.state.getMC?
             <p>Loading MC...</p>:
