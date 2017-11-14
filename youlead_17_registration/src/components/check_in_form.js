@@ -7,12 +7,12 @@ import RaisedButton from 'material-ui/RaisedButton';
 import List from 'material-ui/List/List'
 import ListItem from 'material-ui/List/ListItem'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import Snackbar from 'material-ui/Snackbar'
 import { connect } from 'react-redux'
 import { getUser,getMasterClassesForUser,userCheckIn,updateUser} from '../actions'
 
 const date =(new Date()).toLocaleDateString('ru').split('.').join('')
 const style = {
-  margin: 20,
   padding: 20,
   height:'400%',
   width:'100%',
@@ -31,6 +31,7 @@ const style = {
     super(props);
     this.state = {
       getMC:true,
+      checking:false,
       secretWord: "@",
       secret:false
     }
@@ -51,7 +52,7 @@ const style = {
       //console.log(user[date][index],index)
       const val= (user&&user[date]&&user[date][index])? Object.keys(user[date][index])[0]:null
       const st ={ fontSize: '100%', paddingTop:'3%',width:'100%'}
-      const oncl=(e,i,v) =>this.props.checkInUser(user,index,v,value.filter(f=>f.key===v)[0].name)
+      const oncl=(e,i,v) =>{this.props.checkInUser(user,index,v,value.filter(f=>f.key===v)[0].name);this.setState({checking:true})}
       return <SelectField value={val} style={st} onChange={oncl} floatingLabelText={`Section ${index}`}  >
       {value.map(m=>{return selectMasterClassElement(m)}) }
       </SelectField>
@@ -63,9 +64,9 @@ const style = {
         {this.props.user.section}     
         </p>
   }
-        <TextField type='password' style={{  fontSize: '100%',height:'20%',width:'100%'}} floatingLabelText="Input secret" defaultValue={this.state.secretWord} onChange={this.checkSecret} />
+        <TextField type='password' style={{  fontSize: '100%',height:'20%',width:'100%'}} floatingLabelText="Input secret" onChange={this.checkSecret} />
         <br/>
-        {this.state.secret && 
+        {!this.state.secret&& user && 
             <div>
             {this.state.getMC?
             <p>Loading MC...</p>:
@@ -83,11 +84,18 @@ const style = {
             <RaisedButton 
                 label='Check in (if MC is empty)' 
                 labelStyle={{fontSize: '200%',width:'100%'}}
-                onClick={this.props.updateUser(Object.assign({},user,{[date]:true}))} 
+                onClick={(e)=>this.props.updateUser(Object.assign({},user,{[date]:true})).then(this.setState({checking:true}))} 
                 disabled={this.state.getMC&&masterclasses}/>
               
             </ListItem>
             </List>
+            <Snackbar 
+              open={this.state.checking}
+              contentStyle={{fontSize: '100%'}}
+              message={'Checkin done!!!'}
+              autoHideDuration={5000}
+              //onRequestClose={()=>this.setState({checking:false})}
+            />
                 </div>
         }
       </Paper>
@@ -105,7 +113,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
   return {
     updateUser: (user)=>{
-      updateUser(user).then(dispatch)
+      return updateUser(user).then(dispatch)
     },
     getUser: async () => {
       return getUser(ownProps.match.params.userId).then(a=>{dispatch(a);return a.user})
@@ -120,3 +128,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CheckInForm  )
+

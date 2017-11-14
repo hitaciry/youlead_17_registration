@@ -9,6 +9,7 @@ import {
   TableHeaderColumn,
   TableRow,
   TableRowColumn,
+  TableFooter
 } from 'material-ui/Table'
 
 const date = new Date().toLocaleDateString('ru').split('.').join('')
@@ -42,7 +43,7 @@ class SectionStatisticsTable extends Component{
   render(){
     return<div>
             {this.state.load?<CircularProgress size={80} thickness={5} style={{ display:'flex', justifyContent:'center', width:350,   margin:'auto' }}/>
-              :<Table  displayRowCheckbox={false} fixedHeader={true} fixedFooter={true} height={'400pt'} displayRowCheckbox={false}>>
+              :<Table  displayRowCheckbox={false} fixedHeader={true} fixedFooter={true} displayRowCheckbox={false}>>
                 <TableHeader>
                   <TableRow>
                     <TableHeaderColumn>Status</TableHeaderColumn>
@@ -57,7 +58,12 @@ class SectionStatisticsTable extends Component{
                     </TableRow>
               })
             }      
-            </TableBody>     
+            </TableBody>
+            <TableFooter>
+            <TableRow>
+            <TableHeaderColumn><strong> Total: {Object.values(this.state.section_stat).reduce((next, cur)=>next+cur,0)}</strong></TableHeaderColumn>
+          </TableRow>
+            </TableFooter>     
             </Table>}
           </div>
   }

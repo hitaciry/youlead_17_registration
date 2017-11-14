@@ -20,7 +20,7 @@ const date = new Date().toLocaleDateString('ru').split('.').join('')
 
 const mapStateToProps = (state, ownProps) => {
    return {
-      users:!state.combineReducer.users?null:Object.values(state.combineReducer.users).filter(f=>f.name!==' '&&f.name!=='')
+      users:!state.combineReducer.users?null:Object.values(state.combineReducer.users).filter(f=>f.name!=='  ')
   }
 }
 
@@ -42,21 +42,21 @@ class UsersTable extends Component{
     if(!this.props.users)
     {
       this.setState({load:true})
-      this.props.getUsers().then(u=>{this.setState({users:Object.values(u).filter(f=>f.name!==' '&&f.name!==''),load:false})})
+      this.props.getUsers().then(u=>{this.setState({users:Object.values(u).filter(f=>f.name!=='  '),load:false})})
     }
   }
   render(){
     const start =   this.state.page*100;
-    const end= this.state.users&&(this.state.page+1)*100>this.state.users.length?this.state.users.length-1:(this.state.page+1)*100-1
+    const end= this.state.users&&(this.state.page+1)*100>this.state.users.length?this.state.users.length:(this.state.page+1)*100
     return<div>
             {this.state.load?<CircularProgress size={80} thickness={5} style={{ display:'flex', justifyContent:'center', width:350,   margin:'auto' }}/>
-              :<Table fixedHeader={true} fixedFooter={true} height={'400pt'} displayRowCheckbox={false}>>
+              :<Table fixedHeader={true} fixedFooter={true} height={'400pt'} displaySelectAll={false}>>
                 <TableHeader>
                   <TableRow>
                     <TableHeaderColumn>ID</TableHeaderColumn>
                     <TableHeaderColumn><TextField hintText={'Name'} onChange={(e,v)=>v.length>=3?this.setState({page:0,users:this.props.users.filter(f=>f.name&&f.name.toLowerCase().includes(v.toLowerCase()))}):this.props.users!==this.state.users&&this.setState({users:this.props.users})} /></TableHeaderColumn>
                     <TableHeaderColumn>section</TableHeaderColumn>
-                    <TableHeaderColumn>Status ({this.state.users&&`${this.state.users.length}/${this.state.users.filter(f=>f[date]).length}`})</TableHeaderColumn>
+                    <TableHeaderColumn>Status ({this.state.users&&`${this.state.users.length}/${this.state.users.filter(f=>f[date]).length}`}) <Checkbox onCheck={(e,c)=>c?this.setState({page:0,users:this.props.users.filter(f=>f[date])}):this.props.users!==this.state.users&&this.setState({users:this.props.users})} label={'select checked only'}/></TableHeaderColumn>
                     <TableHeaderColumn>Master class</TableHeaderColumn>
                   </TableRow>
                 </TableHeader>
